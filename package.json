@@ -1,17 +1,17 @@
 {
   "name": "@keak/webmcp-core",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Auto-generate WebMCP tool definitions from any website",
   "author": "Keak <support@keak.com> (https://keak.com)",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/keak-resources/webmcp-core.git"
+    "url": "https://github.com/keak-ai/webmcp-core.git"
   },
   "bugs": {
-    "url": "https://github.com/keak-resources/webmcp-core/issues"
+    "url": "https://github.com/keak-ai/webmcp-core/issues"
   },
-  "homepage": "https://github.com/keak-resources/webmcp-core#readme",
+  "homepage": "https://github.com/keak-ai/webmcp-core#readme",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
