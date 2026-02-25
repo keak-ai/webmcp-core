@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 let cached: string | undefined;
 
@@ -7,7 +8,7 @@ export function getVersion(): string {
   if (cached) return cached;
 
   // Walk up from dist/cli/util/ to find package.json
-  let dir = __dirname;
+  let dir = dirname(fileURLToPath(import.meta.url));
   for (let i = 0; i < 5; i++) {
     try {
       const pkgPath = join(dir, "package.json");
