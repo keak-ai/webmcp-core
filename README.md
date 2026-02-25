@@ -12,8 +12,12 @@
   <br>
   <a href="https://agents.keak.com/">agents.keak.com</a>
   <br><br>
-  <img src="assets/cli_gif.gif" alt="Keak Agent Demo" width="600" />
+  <img src="https://github.com/keak-ai/webmcp-core/blob/main/assets/cli_gif.gif?raw=true" alt="Keak Agent Demo" width="600" />
 </p>
+
+```bash
+npm install @keak/webmcp-core
+```
 
 ---
 

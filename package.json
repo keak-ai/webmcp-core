@@ -1,6 +1,6 @@
 {
   "name": "@keak/webmcp-core",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Auto-generate WebMCP tool definitions from any website",
   "author": "Keak <support@keak.com> (https://keak.com)",
   "license": "MIT",
@@ -44,7 +44,10 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "lint": "tsc --noEmit",
-"prepublishOnly": "npm run build"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@inquirer/prompts": "^7.10.1",
@@ -68,8 +71,10 @@
   "devDependencies": {
     "@types/node": "^22.10.0",
     "@types/uuid": "^10.0.0",
+    "@vitest/coverage-v8": "^4.0.18",
     "playwright-core": "^1.49.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "vitest": "^4.0.18"
   },
   "files": [
     "dist",
