@@ -3,7 +3,7 @@
   <br>
   <strong>WebMCP Core</strong>
   <br>
-  Auto-generate <a href="[[https://developer.chrome.com/docs/ai/webmcp](https://webmachinelearning.github.io/webmcp/)](https://webmachinelearning.github.io/webmcp/)](https://webmachinelearning.github.io/webmcp/)">WebMCP</a> tool definitions from any website.
+  Auto-generate <a href="[[[https://developer.chrome.com/docs/ai/webmcp](https://webmachinelearning.github.io/webmcp/)](https://webmachinelearning.github.io/webmcp/)](https://webmachinelearning.github.io/webmcp/)](https://webmachinelearning.github.io/webmcp/)">WebMCP</a> tool definitions from any website.
   <br><br>
   <a href="https://www.npmjs.com/package/@keak/webmcp-core"><img src="https://img.shields.io/npm/v/@keak/webmcp-core?color=blue" alt="npm" /></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT" /></a>
