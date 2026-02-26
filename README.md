@@ -3,7 +3,7 @@
   <br>
   <strong>WebMCP Core</strong>
   <br>
-  Auto-generate <a href="[[[https://developer.chrome.com/docs/ai/webmcp](https://webmachinelearning.github.io/webmcp/)](https://webmachinelearning.github.io/webmcp/)](https://webmachinelearning.github.io/webmcp/)](https://webmachinelearning.github.io/webmcp/)">WebMCP</a> tool definitions from any website.
+  Auto-generate <a href="https://developer.chrome.com/blog/webmcp-epp">WebMCP</a> tool definitions from any website.
   <br><br>
   <a href="https://www.npmjs.com/package/@keak/webmcp-core"><img src="https://img.shields.io/npm/v/@keak/webmcp-core?color=blue" alt="npm" /></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT" /></a>
@@ -25,7 +25,7 @@ Point this at a URL. It crawls the site, finds every form, API call, and interac
 
 ## What is WebMCP?
 
-[WebMCP](https://developer.chrome.com/docs/ai/webmcp) is a web standard (Chrome 146+) that gives AI agents structured tool contracts on existing websites. Instead of screen-scraping, an agent calls explicit tools registered by the page. The [W3C Web Machine Learning Community Group](https://www.w3.org/community/webmachinelearning/) is developing the specification.
+[WebMCP](https://developer.chrome.com/blog/webmcp-epp) is a web standard (Chrome 146+) that gives AI agents structured tool contracts on existing websites. Instead of screen-scraping, an agent calls explicit tools registered by the page. The [W3C Web Machine Learning Community Group](https://www.w3.org/community/webmachinelearning/) is developing the specification.
 
 Chrome exposes two APIs:
 
@@ -59,7 +59,7 @@ npx @keak/webmcp-core generate https://example.com
 WebMCP requires Chrome 146 or later with an experimental flag enabled.
 
 1. Update Chrome to version **146+** (check `chrome://version`)
-2. Open `chrome://flags/#enable-webmcp-testing`
+2. Open `chrome://flags/#enable-experimental-web-platform-features`
 3. Set the flag to **Enabled**
 4. Relaunch Chrome
 
@@ -295,7 +295,7 @@ Yes. Playwright renders the page fully before capturing the DOM, so dynamic cont
 
 **What Chrome version do I need?**
 
-Chrome 146 or later, with `chrome://flags/#enable-webmcp-testing` enabled. The generated code calls `navigator.modelContext.registerTool()`, which is gated behind this flag.
+Chrome 146 or later, with `chrome://flags/#enable-experimental-web-platform-features` enabled. The generated code calls `navigator.modelContext.registerTool()`, which is gated behind this flag.
 
 **Can I use this without Chrome?**
 
