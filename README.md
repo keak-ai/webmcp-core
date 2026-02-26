@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://cxetbzggx9by1aaf.public.blob.vercel-storage.com/media-assets/icon_1.png" alt="Keak" width="80" />
   <br>
-  <strong>WebMCP Core</strong>
+  <h1>WebMCP Core</h1>
   <br>
   Auto-generate <a href="https://developer.chrome.com/docs/ai/webmcp">WebMCP</a> tool definitions from any website.
   <br><br>
