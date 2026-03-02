@@ -3,6 +3,85 @@ import type { DomSnapshot, DomForm, DomButton, DomLink, FieldSpec } from "../typ
 
 export async function captureDom(page: Page): Promise<DomSnapshot> {
   const result = await page.evaluate(() => {
+    // Helpers must be defined inside evaluate() so they run in the browser context.
+    function getCssPath(el: Element): string {
+      const segments: string[] = [];
+      let current: Element | null = el;
+      while (current && current.nodeType === 1) {
+        const tag = current.tagName.toLowerCase();
+        if (current.id && /^[a-zA-Z][\w-]*$/.test(current.id)) {
+          const idSel: string = "#" + CSS.escape(current.id);
+          try {
+            if (document.querySelector(idSel) === current) {
+              segments.unshift(idSel);
+              break;
+            }
+          } catch {
+            /* ignore */
+          }
+        }
+        const parent: Element | null = current.parentElement;
+        let selector = tag;
+        if (parent) {
+          const siblings = Array.from(parent.children).filter(
+            (n: Element) => n.tagName === current!.tagName
+          );
+          if (siblings.length > 1) {
+            const idx = siblings.indexOf(current) + 1;
+            selector += ":nth-of-type(" + idx + ")";
+          }
+        }
+        segments.unshift(selector);
+        current = parent;
+      }
+      return segments.join(" > ");
+    }
+
+    function getStableSelectors(
+      el: Element,
+      temporarySelector: string
+    ): { primary: string; fallbackSelectors: string[] } {
+      const fallbacks: string[] = [];
+      let primary = "";
+
+      if (el.id && /^[a-zA-Z][\w-]*$/.test(el.id)) {
+        const idSel = "#" + CSS.escape(el.id);
+        if (!primary) primary = idSel;
+        else fallbacks.push(idSel);
+      }
+
+      const ariaLabel = el.getAttribute("aria-label");
+      if (ariaLabel && ariaLabel.trim()) {
+        const ariaSel = '[aria-label="' + ariaLabel.trim().replace(/"/g, '\\"') + '"]';
+        if (!primary) primary = ariaSel;
+        else if (fallbacks.indexOf(ariaSel) === -1) fallbacks.push(ariaSel);
+      }
+
+      const pathSel = getCssPath(el);
+      if (pathSel && pathSel.length < 500) {
+        if (!primary) primary = pathSel;
+        else if (fallbacks.indexOf(pathSel) === -1) fallbacks.push(pathSel);
+      }
+
+      if (!primary) primary = temporarySelector;
+      else if (
+        temporarySelector &&
+        temporarySelector !== primary &&
+        temporarySelector.indexOf("data-webmcp-idx") === -1
+      ) {
+        fallbacks.push(temporarySelector);
+      }
+      if (temporarySelector.indexOf("data-webmcp-idx") !== -1 && temporarySelector !== primary) {
+        fallbacks.push(temporarySelector);
+      }
+
+      const seen: string[] = [];
+      for (let i = 0; i < fallbacks.length; i++) {
+        if (seen.indexOf(fallbacks[i]) === -1) seen.push(fallbacks[i]);
+      }
+      return { primary, fallbackSelectors: seen };
+    }
+
     const forms: DomForm[] = [];
     document.querySelectorAll("form").forEach((form, formIndex) => {
       const fields: FieldSpec[] = [];
@@ -63,11 +142,19 @@ export async function captureDom(page: Page): Promise<DomSnapshot> {
         form.querySelector('button[type="submit"]') ||
         form.querySelector('input[type="submit"]') ||
         form.querySelector("button:not([type])");
-      const submitSelector = submitBtn
+      const submitSelectorRaw = submitBtn
         ? submitBtn.id
           ? `#${submitBtn.id}`
           : `${formSelector} button[type="submit"]`
         : `${formSelector} button`;
+
+      const formStable = getStableSelectors(form, formSelector);
+      const submitStable = submitBtn
+        ? getStableSelectors(submitBtn, submitSelectorRaw)
+        : null;
+      var resolvedSubmitSelector = submitStable
+        ? submitStable.primary
+        : formStable.primary + " button";
 
       const labels: string[] = [];
       const ariaLabel = form.getAttribute("aria-label");
@@ -93,12 +180,20 @@ export async function captureDom(page: Page): Promise<DomSnapshot> {
       }
 
       forms.push({
-        selector: formSelector,
+        selector: formStable.primary,
+        formFallbackSelectors:
+          formStable.fallbackSelectors.length > 0
+            ? formStable.fallbackSelectors
+            : undefined,
         id: form.id || undefined,
         action: form.action || undefined,
         method: (form.method || "GET").toUpperCase(),
         fields,
-        submitSelector,
+        submitSelector: submitStable ? submitStable.primary : resolvedSubmitSelector,
+        submitFallbackSelectors:
+          submitStable && submitStable.fallbackSelectors.length > 0
+            ? submitStable.fallbackSelectors
+            : undefined,
         labels: labels.filter(Boolean),
         toolname,
         tooldescription,
@@ -123,12 +218,18 @@ export async function captureDom(page: Page): Promise<DomSnapshot> {
 
         if (!text && !ariaLabel) return;
 
-        const selector = el.id
-          ? `#${el.id}`
+        const temporarySelector = el.id
+          ? "#" + CSS.escape(el.id)
           : `[data-webmcp-idx="${idx}"]`;
+        const { primary, fallbackSelectors } = getStableSelectors(
+          el,
+          temporarySelector
+        );
 
         buttons.push({
-          selector,
+          selector: primary,
+          fallbackSelectors:
+            fallbackSelectors.length > 0 ? fallbackSelectors : undefined,
           text,
           ariaLabel,
           type: (el as HTMLButtonElement).type || undefined,
@@ -152,12 +253,18 @@ export async function captureDom(page: Page): Promise<DomSnapshot> {
         isInternal = true;
       }
 
-      const selector = anchor.id
-        ? `#${anchor.id}`
+      const temporarySelector = anchor.id
+        ? "#" + anchor.id
         : `a[href="${anchor.getAttribute("href")}"]`;
+      const { primary, fallbackSelectors } = getStableSelectors(
+        el,
+        temporarySelector
+      );
 
       links.push({
-        selector,
+        selector: primary,
+        fallbackSelectors:
+          fallbackSelectors.length > 0 ? fallbackSelectors : undefined,
         text,
         href,
         ariaLabel,

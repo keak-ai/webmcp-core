@@ -37,6 +37,7 @@ export function extractClickFlows(
         id: uuid(),
         pageUrl: page.url,
         startSelector: button.selector,
+        startFallbackSelectors: button.fallbackSelectors,
         labels: [button.text, button.ariaLabel].filter(
           (s): s is string => !!s && s.trim().length > 0
         ),
