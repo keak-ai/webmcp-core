@@ -68,8 +68,10 @@ export interface FormSubmitAction {
   id: string;
   pageUrl: string;
   formSelector: string;
+  formFallbackSelectors?: string[];
   fields: FieldSpec[];
   submitSelector: string;
+  submitFallbackSelectors?: string[];
   labels: string[];
   method?: "GET" | "POST";
   action?: string; // Form action URL
@@ -81,7 +83,9 @@ export interface ClickFlowAction {
   id: string;
   pageUrl: string;
   startSelector: string;
+  startFallbackSelectors?: string[];
   intermediateSteps?: string[];
+  intermediateFallbackSelectors?: string[][];
   resultingUrl?: string;
   networkCalls: NetworkCall[];
   labels: string[];
@@ -111,15 +115,16 @@ export type HandlerStep =
   | {
       step: "fill_form";
       formSelector: string;
+      formFallbackSelectors?: string[];
       mapping: Record<string, string>;
     }
-  | { step: "click"; selector: string; waitFor?: string }
+  | { step: "click"; selector: string; fallbackSelectors?: string[]; waitFor?: string }
   | {
       step: "wait_network";
       match: { urlIncludes?: string; operationName?: string };
     }
-  | { step: "wait_element"; selector: string; timeout?: number }
-  | { step: "extract"; selector: string; attribute?: string }
+  | { step: "wait_element"; selector: string; fallbackSelectors?: string[]; timeout?: number }
+  | { step: "extract"; selector: string; fallbackSelectors?: string[]; attribute?: string }
   | {
       step: "return";
       format: "text" | "json";
@@ -210,11 +215,13 @@ export interface DomSnapshot {
 
 export interface DomForm {
   selector: string;
+  formFallbackSelectors?: string[];
   id?: string;
   action?: string;
   method?: string;
   fields: FieldSpec[];
   submitSelector?: string;
+  submitFallbackSelectors?: string[];
   labels: string[];
   // Chrome WebMCP Declarative API attributes (Chrome 146+)
   toolname?: string;
@@ -224,6 +231,7 @@ export interface DomForm {
 
 export interface DomButton {
   selector: string;
+  fallbackSelectors?: string[];
   text: string;
   ariaLabel?: string;
   type?: string;
@@ -232,6 +240,7 @@ export interface DomButton {
 
 export interface DomLink {
   selector: string;
+  fallbackSelectors?: string[];
   text: string;
   href: string;
   ariaLabel?: string;

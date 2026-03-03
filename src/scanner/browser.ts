@@ -23,7 +23,8 @@ export async function launchBrowser(
     pw = await import("playwright-core");
   } catch {
     try {
-      pw = await import("playwright") as typeof import("playwright-core");
+      const playwrightPkg = "playwright";
+      pw = (await import(playwrightPkg)) as typeof import("playwright-core");
     } catch {
       throw new Error(
         "Playwright is required for scanning. Install one of:\n" +

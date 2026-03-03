@@ -1,6 +1,6 @@
 {
   "name": "@keak/webmcp-core",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Auto-generate WebMCP tool definitions from any website",
   "author": "Keak <support@keak.com> (https://keak.com)",
   "license": "MIT",

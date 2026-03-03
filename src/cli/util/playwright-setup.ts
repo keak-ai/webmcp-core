@@ -141,7 +141,8 @@ async function isPlaywrightModuleAvailable(): Promise<boolean> {
     return true;
   } catch {
     try {
-      await import("playwright");
+      const playwrightPkg = "playwright";
+      await import(playwrightPkg);
       return true;
     } catch {
       return false;
@@ -158,7 +159,8 @@ async function isPlaywrightBrowserAvailable(): Promise<boolean> {
     try {
       pw = await import("playwright-core");
     } catch {
-      pw = (await import("playwright")) as typeof import("playwright-core");
+      const playwrightPkg = "playwright";
+      pw = (await import(playwrightPkg)) as typeof import("playwright-core");
     }
 
     // executablePath() returns the path even if the binary doesn't exist

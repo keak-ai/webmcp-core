@@ -168,12 +168,14 @@ function buildHandlerTemplate(actions: Action[]): HandlerTemplate {
       steps.push({
         step: "fill_form",
         formSelector: primary.formSelector,
+        formFallbackSelectors: primary.formFallbackSelectors,
         mapping,
       });
 
       steps.push({
         step: "click",
         selector: primary.submitSelector,
+        fallbackSelectors: primary.submitFallbackSelectors,
       });
 
       steps.push({
@@ -205,10 +207,15 @@ function buildHandlerTemplate(actions: Action[]): HandlerTemplate {
       });
 
       if (primary.intermediateSteps) {
-        for (const selector of primary.intermediateSteps) {
+        for (let i = 0; i < primary.intermediateSteps.length; i++) {
+          const selector = primary.intermediateSteps[i];
+          const fallbackSelectors = primary.intermediateFallbackSelectors?.[i];
           steps.push({
             step: "click",
             selector,
+            ...(fallbackSelectors && fallbackSelectors.length > 0
+              ? { fallbackSelectors }
+              : {}),
           });
         }
       }
